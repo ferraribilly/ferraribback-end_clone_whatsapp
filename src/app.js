@@ -18,7 +18,7 @@ const app = express();
 
 // Configuração CORS
 app.use(cors({
-  origin: 'http://localhost:3000',  // <-- liberar só seu front-end
+  origin: 'https://whats-delivery-uber-vairapido.onrender.com/',  // <-- liberar só seu front-end
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true  // Caso use cookies ou tokens com credenciais
 }));
