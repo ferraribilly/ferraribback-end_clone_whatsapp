@@ -18,8 +18,9 @@ const app = express();
 
 // Configuração CORS
 app.use(cors({
-    origin: 'https://front-end-whatsapp.vercel.app',  // libera só seu frontend
-    credentials: true
+  origin: 'http://localhost:3000',  // <-- liberar só seu front-end
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true  // Caso use cookies ou tokens com credenciais
 }));
 
 //helmet
