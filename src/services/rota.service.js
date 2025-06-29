@@ -73,7 +73,7 @@ export async function calcularRota(origem, destino) {
       destino: { coords: [destinoLat, destinoLon] },
     };
   } catch (err) {
-    console.error(`[ERRO] Falha na chamada ao OSRM: ${err.message}`);
+    console.error("[ERRO] Falha na chamada ao OSRM:", err.response?.data || err.message || err);
     throw new Error("Erro ao calcular rota.");
   }
 }
