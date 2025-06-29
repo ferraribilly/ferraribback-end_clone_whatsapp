@@ -47,11 +47,22 @@ app.use(
   })
 );
 
+const allowedOrigins = ['https://whats-delivery-uber-vairapido.onrender.com', 'http://localhost:5000'];
+
 app.use(cors({
-  origin: ['https://whats-delivery-uber-vairapido.onrender.com', 'http://localhost:5000'],
+  origin: function(origin, callback) {
+    // permitir requests sem origin (ex: curl, postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
+
 
 
 
