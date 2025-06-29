@@ -10,18 +10,17 @@ import cors from "cors";
 import createHttpError from "http-errors";
 import routes from "./routes/index.js";
 
+
 //dotEnv config
 dotenv.config();
 
 //create express app
 const app = express();
 
-// Configuração CORS
-app.use(cors({
-  origin: 'https://whats-delivery-uber-vairapido.onrender.com',  // <-- liberar só seu front-end
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true  // Caso use cookies ou tokens com credenciais
-}));
+//morgan
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 
 //helmet
 app.use(helmet());
@@ -48,10 +47,19 @@ app.use(
   })
 );
 
+app.use(cors({
+  origin: ['https://whats-delivery-uber-vairapido.onrender.com', 'http://localhost:5001'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true
+}));
 
 
-//api v1 routes
+
+//routes
 app.use("/api/v1", routes);
+
+
+
 
 app.use(async (req, res, next) => {
   next(createHttpError.NotFound("This route does not exist."));
