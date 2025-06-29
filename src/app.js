@@ -48,7 +48,7 @@ app.use(
 );
 
 app.use(cors({
-  origin: ['https://whats-delivery-uber-vairapido.onrender.com', 'http://localhost:5001'],
+  origin: ['https://whats-delivery-uber-vairapido.onrender.com', 'http://localhost:5000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
