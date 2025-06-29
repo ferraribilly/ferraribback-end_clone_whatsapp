@@ -47,7 +47,7 @@ app.use(
   })
 );
 
-const allowedOrigins = ['https://whats-delivery-uber-vairapido.onrender.com', 'http://localhost:5000'];
+
 
 const allowedOrigins = [
   'https://whats-delivery-uber-vairapido.onrender.com',
