@@ -50,10 +50,7 @@ app.use(
 
 
 const allowedOrigins = [
-  "https://whats-delivery-uber-vairapido.onrender.com",
-  "http://localhost:5001",
-  "http://172.26.90.27:5001",
-  "http://172.26.90.27:5000",
+  'https://whats-delivery-uber-vairapido.onrender.com',
 ];
 
 app.use(cors({
@@ -62,9 +59,10 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) return callback(null, true);
     return callback(null, false);
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
+
 
 
 
