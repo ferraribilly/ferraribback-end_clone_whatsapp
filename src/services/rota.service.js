@@ -2,7 +2,7 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
-const OSRM_URL = "http://localhost:5001/route/v1/driving"; // Atenção na porta, que no seu curl é 5001
+const OSRM_URL = process.env.REACT_APP_OSRM_URL;
 
 // Verifica se é coordenada (lon,lat)
 function ehCoordenada(valor) {
@@ -15,6 +15,7 @@ function ehCoordenada(valor) {
     return false;
   }
 }
+
 
 // Geocodificação - pode ser removida se só trabalhar com coordenadas
 async function geocodeEndereco(endereco) {
@@ -73,7 +74,7 @@ export async function calcularRota(origem, destino) {
       destino: { coords: [destinoLat, destinoLon] },
     };
   } catch (err) {
-    console.error("[ERRO] Falha na chamada ao OSRM:", err.response?.data || err.message || err);
+    console.error(`[ERRO] Falha na chamada ao OSRM: ${err.message}`);
     throw new Error("Erro ao calcular rota.");
   }
 }
