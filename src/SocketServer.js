@@ -1,5 +1,8 @@
 let onlineUsers = [];
 export default function (socket, io) {
+
+
+  
   //user joins or opens the application
   socket.on("join", (user) => {
     socket.join(user);

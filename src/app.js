@@ -47,11 +47,27 @@ app.use(
   })
 );
 
+
+
+const allowedOrigins = [
+  'https://whats-delivery-uber-vairapido.onrender.com',
+  'https://busy-sawfly-new.ngrok-free.app',
+  'http://localhost:3000',
+];
+
 app.use(cors({
-  origin: ['https://whats-delivery-uber-vairapido.onrender.com', 'http://localhost:5000'],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }));
+
 
 
 

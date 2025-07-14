@@ -16,7 +16,7 @@ export const doesConversationExist = async (sender_id, receiver_id) => {
 
   convos = await UserModel.populate(convos, {
     path: "latestMessage.sender",
-    select: "name email picture status",
+    select: "name email picture status statusUber",
   });
 
   return convos[0];
@@ -54,7 +54,7 @@ export const getUserConversations = async (user_id) => {
     .then(async (results) => {
       results = await UserModel.populate(results, {
         path: "latestMessage.sender",
-        select: "name email picture status",
+        select: "name email picture status statusUber",
       });
       conversations = results;
     })

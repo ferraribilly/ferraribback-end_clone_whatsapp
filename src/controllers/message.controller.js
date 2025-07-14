@@ -4,6 +4,7 @@ import {
   createMessage,
   getConvoMessages,
   populateMessage,
+  deleteMessagesByIds,
 } from "../services/message.service.js";
 
 export const sendMessage = async (req, res, next) => {
@@ -28,6 +29,7 @@ export const sendMessage = async (req, res, next) => {
     next(error);
   }
 };
+
 export const getMessages = async (req, res, next) => {
   try {
     const convo_id = req.params.convo_id;
@@ -39,5 +41,22 @@ export const getMessages = async (req, res, next) => {
     res.json(messages);
   } catch (error) {
     next(error);
+  }
+};
+
+
+export const deleteMessages = async (req, res, next) => {
+  try {
+    const { messages } = req.body;
+
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ message: "Invalid request body!" });
+    }
+
+    await deleteMessagesByIds(messages);
+    res.json({ message: "Messages deleted successfully" });
+  } catch (error) {
+    next(error);
+    console.error(error);
   }
 };

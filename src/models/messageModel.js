@@ -9,15 +9,29 @@ const messageSchema = mongoose.Schema(
       ref: "UserModel",
     },
     message: {
-      type: String,
-      trim: true,
-    },
+     enum: ["text", "image"],
+  },
+  message: String,
+  imageUrl: String,
+  timeStamp: {
+    type: Date,
+    default: Date.now,
+  },
+
+   recepientId: {
+    type: ObjectId,
+    ref: "User",
+  },
+  
     conversation: {
       type: ObjectId,
       ref: "ConversationModel",
     },
+    
     files: [],
   },
+
+ 
   {
     collection: "messages",
     timestamps: true,

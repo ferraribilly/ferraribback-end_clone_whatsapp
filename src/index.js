@@ -5,7 +5,7 @@ import logger from "./configs/logger.config.js";
 import SocketServer from "./SocketServer.js";
 //env variables
 const { DATABASE_URL } = process.env;
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 5000;
 
 //exit on mognodb error
 mongoose.connection.on("error", (err) => {
@@ -32,9 +32,12 @@ server = app.listen(PORT, () => {
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    origin: process.env.CLIENT_ENDPOINT,
+    origin: [process.env.CLIENT_ENDPOINT, "http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
+
 io.on("connection", (socket) => {
   logger.info("socket io connected successfully.");
   SocketServer(socket, io);

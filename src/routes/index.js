@@ -1,22 +1,22 @@
 import express from "express";
 import authRoutes from "./auth.route.js";
-import userROutes from "./user.route.js";
-import ConversationRoutes from "./conversation.route.js";
-import MessageRoutes from "./message.route.js";
-import storeRoutes from "./store.route.js"
-import apiRoutes from "./api.route.js";
+import userRoutes from "./user.route.js";
+import conversationRoutes from "./conversation.route.js";
+import messageRoutes from "./message.route.js";
+import ordersRoutes from "./orders.route.js"
+import webhookRoutes from "./webhook.route.js";
 
 
 const router = express.Router();
 
-//Rotas do Whatsapp Ferrari Aqui
 router.use("/auth", authRoutes);
-router.use("/user", userROutes);
-router.use("/conversation", ConversationRoutes);
-router.use("/message", MessageRoutes);
+router.use("/user", userRoutes); 
+router.use("/conversation", conversationRoutes);
+router.use("/message", messageRoutes);
+router.use("/orders", ordersRoutes); 
+router.use("/notifications", webhookRoutes); 
 
-//Rotas 
-router.use('/store', storeRoutes);
-router.use('/route/request', apiRoutes);
 
 export default router;
+
+

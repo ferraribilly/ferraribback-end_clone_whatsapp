@@ -1,3 +1,4 @@
+// ✅ src/controllers/conversation.controller.js — CORRIGIDO
 import createHttpError from "http-errors";
 import logger from "../configs/logger.config.js";
 import {
@@ -6,7 +7,13 @@ import {
   getUserConversations,
   populateConversation,
 } from "../services/conversation.service.js";
-import { findUser } from "../services/user.service.js";
+
+import {
+  findUser,
+  getPedidoRequestsService,
+  sendPedidoRequestService,
+  getAcceptedPedidosService,
+} from "../services/user.service.js"; // ← AGORA CORRETO
 
 export const create_open_conversation = async (req, res, next) => {
   try {
@@ -14,7 +21,7 @@ export const create_open_conversation = async (req, res, next) => {
     const { receiver_id } = req.body;
     if (!receiver_id) {
       logger.error("receiver_id is required");
-      throw createHttpError.BadGateway("Something went wrong ");
+      throw createHttpError.BadGateway("Something went wrong");
     }
     const existedConversation = await doesConversationExist(
       sender_id,
@@ -23,7 +30,6 @@ export const create_open_conversation = async (req, res, next) => {
     if (existedConversation) {
       res.json(existedConversation);
     } else {
-      console.log("cool");
       let reciever_user = await findUser(receiver_id);
       let convoData = {
         name: reciever_user.name,
@@ -53,26 +59,56 @@ export const getConversations = async (req, res, next) => {
     next(error);
   }
 };
-export const createGroup = async (req, res, next) => {
-  const { name, users } = req.body;
-  //add current user to users
-  users.push(req.user.userId);
-  if (!name || !users) {
-    throw createHttpError.BadRequest("Please fill all fields.");
-  }
-  if (users.length < 2) {
-    throw createHttpError.BadRequest(
-      "Atleast 2 users are required to start a group chat."
-    );
-  }
-  let convoData = {
-    name,
-    users,
-    isGroup: true,
-    admin: req.user.userId,
-    picture: process.env.DEFAULT_GROUP_PICTURE,
-  };
+
+export const getPedidoRequestsController = async (req, res, next) => {
   try {
+    const { userId } = req.params;
+    const result = await getPedidoRequestsService(userId);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const sendPedidoRequestController = async (req, res, next) => {
+  try {
+    const { senderId, recepientId, tipoVeiculo } = req.body;
+    const result = await sendPedidoRequestService({ senderId, recepientId, tipoVeiculo });
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAcceptedPedidosController = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const result = await getAcceptedPedidosService(userId);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createGroup = async (req, res, next) => {
+  try {
+    const { name, users } = req.body;
+    users.push(req.user.userId);
+    if (!name || !users) {
+      throw createHttpError.BadRequest("Please fill all fields.");
+    }
+    if (users.length < 2) {
+      throw createHttpError.BadRequest(
+        "At least 2 users are required to start a group chat."
+      );
+    }
+    let convoData = {
+      name,
+      users,
+      isGroup: true,
+      admin: req.user.userId,
+      picture: process.env.DEFAULT_GROUP_PICTURE,
+    };
     const newConvo = await createConversation(convoData);
     const populatedConvo = await populateConversation(
       newConvo._id,

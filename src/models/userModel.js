@@ -10,8 +10,8 @@ const userSchema = mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "Please provide tour email address"],
-      unqiue: [true, "This email address already exist"],
+      required: [true, "Please provide your email address"],
+      unique: [true, "This email address already exists"],
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email address"],
     },
@@ -22,19 +22,92 @@ const userSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      default: "Hey there ! I am using whatsapp",
+      default: "Hey there! I am using whatsapp",
     },
     password: {
       type: String,
       required: [true, "Please provide your password"],
       minLength: [
         6,
-        "Plase make sure your password is atleast 6 characters long",
+        "Please make sure your password is at least 6 characters long",
       ],
       maxLength: [
         128,
-        "Plase make sure your password is less than 128 characters long",
+        "Please make sure your password is less than 128 characters long",
       ],
+    },
+
+    //✅ CAMPO orders
+    pedidoRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  pedidos: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  sentPedidoRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+
+    // ✅ CAMPOS OPCIONAIS DE VEÍCULO
+    tipoVeiculo: {
+      type: String,
+      default: "",
+    },
+    
+    marca: {
+      type: String,
+      default: "",
+    },
+    cor: {
+      type: String,
+      default: "",
+    },
+    placa: {
+      type: String,
+      default: "",
+    },
+     precoPorKm: {
+      type: String,
+      default: "",
+    },
+     precoPorMinuto: {
+      type: String,
+      default: "",
+    },
+     taxaFixa: {
+      type: String,
+      default: "",
+    },
+     descontoHorario: {
+      type: String,
+      default: "",
+    },
+    chavePix: {
+      type: String,
+      default: "",
+    },
+
+    // ✅ IMAGENS OPCIONAIS (UPLOAD)
+    fotoCNH: {
+      type: String,
+      default: "",
+    },
+    fotoDocumentoVeiculo: {
+      type: String,
+      default: "",
+    },
+    fotoQrCode: {
+      type: String,
+      default: "",
     },
   },
   {
@@ -42,6 +115,7 @@ const userSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
 userSchema.pre("save", async function (next) {
   try {
     if (this.isNew) {
@@ -54,6 +128,7 @@ userSchema.pre("save", async function (next) {
     next(error);
   }
 });
+
 const UserModel =
   mongoose.models.UserModel || mongoose.model("UserModel", userSchema);
 
