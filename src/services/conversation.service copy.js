@@ -22,7 +22,56 @@ export const doesConversationExist = async (sender_id, receiver_id) => {
   return convos[0];
 };
 
+// Envia uma solicitação de conversa ligada a um pedido específico
+export const sendConversationRequest = async (sender_id, receiver_id, orderId) => {
+  // Verifica se já existe uma solicitação pendente ENTRE os dois usuários PARA A MESMA ordem
+  const existing = await ConversationModel.findOne({
+    isGroup: false,
+    status: "pending",
+    users: { $all: [sender_id, receiver_id] },
+    order: orderId,
+  });
 
+  if (existing) {
+    throw createHttpError.BadRequest("Request already pending for this order.");
+  }
+
+  const request = await ConversationModel.create({
+    sender: sender_id,
+    receiver: receiver_id,
+    users: [sender_id, receiver_id],
+    order: orderId,
+    isGroup: false,        // se você tiver grupos no schema
+    status: "pending",     // default, mas bom deixar explícito
+  });
+
+  return request;
+};
+
+// Lista todas as solicitações pendentes que o usuário RECEBEU
+export const getPendingRequests = async (userId) => {
+  const requests = await ConversationModel.find({
+    receiver: userId,
+    status: "pending",
+  }).populate("sender", "-password");
+
+  return requests;
+};
+
+// Motorista ou passageiro aceita ou rejeita a solicitação de conversa
+export const respondToRequest = async (requestId, status) => {
+  if (!["accepted", "rejected"].includes(status)) {
+    throw createHttpError.BadRequest("Invalid status.");
+  }
+
+  const request = await ConversationModel.findById(requestId);
+  if (!request) throw createHttpError.NotFound("Request not found.");
+
+  request.status = status;
+  await request.save();
+
+  return request;
+};
 
 export const createConversation = async (data) => {
   const newConvo = await ConversationModel.create(data);

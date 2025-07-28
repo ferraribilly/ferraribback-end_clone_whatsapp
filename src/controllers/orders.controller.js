@@ -1,17 +1,37 @@
+// src/controllers/orders.controller.js
 import {
   criarPedidoService,
   buscarPedidosPorTipo,
   buscarPedidoPorId,
-  atualizarPedido
+  atualizarPedido,
 } from "../services/orders.service.js";
 
+// ✅ Lista de usuários online com socketId
+import { onlineUsers } from "../SocketServer.js";
+
+// 📌 Criar Pedido
 export const criarPedido = async (req, res) => {
   try {
     if (!req.body.userId) {
       return res.status(400).json({ message: "userId é obrigatório." });
     }
-    const novoPedido = await criarPedidoService(req.body);
-    res.status(201).json({ message: "Pedido criado com sucesso!", pedido: novoPedido });
+
+    const io = req.io;
+
+    // 🔍 Buscar socketId do motorista online
+    const motoristaId = req.body.motorista._id;
+    const motoristaOnline = onlineUsers.find((u) => u.userId === motoristaId);
+
+    // 🎯 Pega o socketId se motorista estiver online
+    const socketId = motoristaOnline ? motoristaOnline.socketId : null;
+
+    // ⚙️ Criar pedido, passando io e socketId para emitir a notificação
+    const pedidoCriado = await criarPedidoService(req.body, io, socketId);
+
+    res.status(201).json({
+      message: "Pedido criado com sucesso!",
+      pedido: pedidoCriado,
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -44,3 +64,7 @@ export const atualizarPedidoController = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+
+
+

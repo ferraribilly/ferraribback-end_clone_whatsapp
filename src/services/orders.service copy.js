@@ -12,9 +12,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
-
-
 export async function criarPedidoService(dados, io, socketId) {
   if (!dados.userId) throw new Error("userId é obrigatório para criar pedido.");
 

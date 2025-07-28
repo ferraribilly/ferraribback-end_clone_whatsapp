@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 const { ObjectId } = mongoose.Schema.Types;
+
 const conversationSchema = mongoose.Schema(
   {
     name: {
@@ -30,6 +31,25 @@ const conversationSchema = mongoose.Schema(
       type: ObjectId,
       ref: "UserModel",
     },
+
+    // // CAMPOS ADICIONADOS ABAIXO para bater com os services/controllers
+    // sender: {
+    //   type: ObjectId,
+    //   ref: "UserModel",
+    // },
+    // receiver: {
+    //   type: ObjectId,
+    //   ref: "UserModel",
+    // },
+    // order: {
+    //   type: ObjectId,
+    //   ref: "OrderModel", // Ajusta conforme o nome real do seu model de pedidos
+    // },
+    // status: {
+    //   type: String,
+    //   enum: ["pending", "accepted", "rejected"],
+    //   default: "pending",
+    // },
   },
   {
     collection: "conversations",

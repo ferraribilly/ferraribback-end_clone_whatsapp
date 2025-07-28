@@ -39,7 +39,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  logger.info("socket io connected successfully.");
+  logger.info("Vai Rapido Conectada!!!!.");
   SocketServer(socket, io);
 });
 
@@ -67,3 +67,4 @@ process.on("SIGTERM", () => {
     process.exit(1);
   }
 });
+

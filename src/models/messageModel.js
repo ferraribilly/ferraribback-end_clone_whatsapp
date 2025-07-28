@@ -17,12 +17,6 @@ const messageSchema = mongoose.Schema(
     type: Date,
     default: Date.now,
   },
-
-   recepientId: {
-    type: ObjectId,
-    ref: "User",
-  },
-  
     conversation: {
       type: ObjectId,
       ref: "ConversationModel",

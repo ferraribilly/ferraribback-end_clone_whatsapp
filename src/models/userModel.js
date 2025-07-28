@@ -37,32 +37,31 @@ const userSchema = mongoose.Schema(
       ],
     },
 
-    //✅ CAMPO orders
-    pedidoRequests: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
-  pedidos: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
-  sentPedidoRequests: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
+    sendRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+    orders: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
+    sentOrdersRequests: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+      },
+    ],
 
     // ✅ CAMPOS OPCIONAIS DE VEÍCULO
     tipoVeiculo: {
       type: String,
-      default: "",
+      enum: ["carro", "moto", "entregador"],
+      required: false,
     },
-    
     marca: {
       type: String,
       default: "",
@@ -75,20 +74,20 @@ const userSchema = mongoose.Schema(
       type: String,
       default: "",
     },
-     precoPorKm: {
-      type: String,
+    precoPorKm: {
+      type: Number,
       default: "",
     },
-     precoPorMinuto: {
-      type: String,
+    precoPorMinuto: {
+      type: Number,
       default: "",
     },
-     taxaFixa: {
-      type: String,
+    taxaFixa: {
+      type: Number,
       default: "",
     },
-     descontoHorario: {
-      type: String,
+    descontoHorario: {
+      type: Number,
       default: "",
     },
     chavePix: {
@@ -109,12 +108,28 @@ const userSchema = mongoose.Schema(
       type: String,
       default: "",
     },
+
+    // ✅ LOCALIZAÇÃO GEOSPACIAL
+    location: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: "Point",
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        default: [0, 0],
+      },
+    },
   },
   {
     collection: "users",
     timestamps: true,
   }
 );
+
+// Índice geoespacial
+userSchema.index({ location: "2dsphere" });
 
 userSchema.pre("save", async function (next) {
   try {

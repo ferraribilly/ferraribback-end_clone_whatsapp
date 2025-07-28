@@ -1,18 +1,40 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-  name: String,
-  email: String,
-  origem: String,
-  destino: String,
-  distancia: Number,
-  duracao: Number,
-  tipoVeiculo: { type: String, enum: ["carro", "moto", "entregador"], required: true },
-  formaPagamento: String,
-  valorCorrida: Number,
-  statusPedido: { type: String, default: "aguardando o motorista aceitar" }, 
-}, { timestamps: true });
+const { ObjectId } = mongoose.Schema.Types;
 
-const Orders = mongoose.model("Orders", orderSchema);
-export default Orders;
+const ordersSchema = mongoose.Schema(
+  {
+    sender: {
+      type: ObjectId,
+      ref: "UserModel",
+    },
+    messageAutomatica: {
+     enum: ["text", "image"],
+  },
+  messageAutomatica: String,
+  imageUrl: String,
+  timeStamp: {
+    type: Date,
+    default: Date.now,
+  },
+    conversation: {
+      type: ObjectId,
+      ref: "ConversationModel",
+    },
+    
+    
+    files: [],
+  },
+
+ 
+  {
+    collection: "Orders",
+    timestamps: true,
+  }
+);
+
+const OrdersModel =
+  mongoose.models.OrdersModel || mongoose.model("OrdersModel", ordersSchema);
+
+export default OrdersModel;
+
